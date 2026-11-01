@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Wonderland</title>
+
+<style>
+
+body {background-image: url(stud-prof-img.png);}
+
+.btn {background-color: transparent;
+	border: 3px solid #f4c176;
+	color: #f4c176;
+	border-radius: 12px;
+	font-size: 130%;
+	font-family: "Colonna MT";}
+
+  .card-trail {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    font-size: 50px;
+    font-family: serif;
+    z-index: 9999;
+    animation: fallAndFade 1s linear forwards;
+  }
+
+  .card-burst {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    font-size: 65px;
+    font-family: serif;
+    z-index: 9999;
+    animation: burstAndFade 0.6s ease-out forwards;
+  }
+
+  @keyframes fallAndFade {
+    0% {
+      transform: translateY(0) scale(1) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100px) scale(0.5) rotate(360deg);
+      opacity: 0;
+    }
+  }
+
+  @keyframes burstAndFade {
+    0% {
+      transform: translate(0, 0) scale(1) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(var(--tx), var(--ty)) scale(0.3) rotate(var(--rot));
+      opacity: 0;
+    }
+  }
+
+</style>
+</head>
+<body>
+
+<p style="color: rgba(0, 0, 0, 0); font-size: 50%">Hello?</p>
+<audio controls autoplay loop style="margin: 0 auto; display: block;">
+<source src="https://mp3tourl.com/audio/1793281511005-2cb32418-cdb2-4b54-b820-22f8d52f042f.mp3" type="audio/mpeg">
+</audio>
+
+<p style="color: rgba(0, 0, 0, 0); font-size: 90%">Hello?</p>
+<p style="color: rgba(0, 0, 0, 0); font-size: 90%">Hello?</p>
+
+<h1 style="color: white; font-size: 200%; text-align: center; text-decoration: overline underline;" id="StudProf">About <em>Me</em></h1>
+
+<p style="text-align: center;"><button class="btn" onclick="toggleSubject('StudProf')">See Other Text</button></p>
+
+<div id="myDIV_StudProf" style="color: white; font-size: 150%; text-align: center;">
+  Hi!<br>My name is Vivien Yaj Marley Sanchez,<br>a student of Grade 9 Gallantry.<br>I am fourteen years old, and currently reside in a<br>subdivision in Pampanga.
+</div>
+
+<p style="color: rgba(0, 0, 0, 0); font-size: 150%">Hello?</p>
+<p style="color: rgba(0, 0, 0, 0); font-size: 150%">Hello?</p>
+<p style="color: rgba(0, 0, 0, 0); font-size: 150%">Hello?</p>
+<p style="color: rgba(0, 0, 0, 0); font-size: 150%">Hello?</p>
+
+<p style="text-align: center;">
+    <a href="index.html">
+        <button class="btn">Go Back to Start</button>
+    </a>
+</p>
+
+<script>
+
+const suits = ['♠', '♥', '♦', '♣'];
+const colors = ['red', 'black', 'black', 'red'];
+let lastMove = 0;
+
+document.addEventListener('mousemove', function(e) {
+  const now = Date.now();
+  if (now - lastMove < 30) return;
+  lastMove = now;
+
+  const element = document.createElement('div');
+  element.className = 'card-trail';
+  
+  const randomIndex = Math.floor(Math.random() * suits.length);
+  element.innerText = suits[randomIndex];
+  element.style.color = colors[randomIndex];
+
+  element.style.left = (e.clientX - 10) + 'px';
+  element.style.top = (e.clientY - 10) + 'px';
+
+  const randomXDrift = (Math.random() - 0.5) * 40;
+  element.style.setProperty('--drift', randomXDrift + 'px');
+
+  document.body.appendChild(element);
+
+  setTimeout(() => {
+    element.remove();
+  }, 1000);
+});
+
+document.addEventListener('click', function(e) {
+  const particleCount = 8;
+  const radius = 80;
+
+  for (let i = 0; i < particleCount; i++) {
+    const angle = (i / particleCount) * 2 * Math.PI;
+    const targetX = Math.cos(angle) * radius;
+    const targetY = Math.sin(angle) * radius;
+    const randomRotation = Math.floor(Math.random() * 360) + 'deg';
+
+    const element = document.createElement('div');
+    element.className = 'card-burst';
+
+    const randomIndex = Math.floor(Math.random() * suits.length);
+    element.innerText = suits[randomIndex];
+    element.style.color = colors[randomIndex];
+
+    element.style.left = (e.clientX - 12) + 'px';
+    element.style.top = (e.clientY - 12) + 'px';
+
+    element.style.setProperty('--tx', targetX + 'px');
+    element.style.setProperty('--ty', targetY + 'px');
+    element.style.setProperty('--rot', randomRotation);
+
+    document.body.appendChild(element);
+
+    setTimeout(() => {
+      element.remove();
+    }, 600);
+  }
+});
+
+const subjectStates = {
+  StudProf: 0
+};
+
+const subjectTexts = {
+    StudProf: [
+    "Hi!<br>My name is Vivien Yaj Marley Sanchez,<br>a student of Grade 9 Gallantry.<br>I am fourteen years old, and currently reside in a<br>subdivision in Pampanga.",
+    "This project has taught me so much.<br>Not just when it comes to coding,<br>but it also lengthened my imagination,<br>and guided my mind closer towards<br>every subject.",
+    "Thank you to every teacher<br>who guided us along the way.<br>Thank you for every lesson<br>that we live through every day.<br>And with that, see you next quarter."
+  ],
+}
+
+function toggleSubject(subject) {
+    const totalTexts = subjectTexts[subject].length;
+    subjectStates[subject] = (subjectStates[subject] + 1) % totalTexts;
+    const nextText = subjectTexts[subject][subjectStates[subject]];
+    document.getElementById('myDIV_' + subject).innerHTML = nextText;
+}
+
+</script>
+
+</body>
+</html>
